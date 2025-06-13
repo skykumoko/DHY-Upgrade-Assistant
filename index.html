@@ -10,15 +10,20 @@
 <body>
     <div id="resourceTracker">
         <!-- 标题 -->
-        <div class="title-box">
-            <h1>密探升级助手</h1>
-        </div>
-
-        <!-- 状态面板 -->
         <div class="status-board">
-            <h2>当前可升级密探：</h2>
-            <div class="class-status" id="classStatus">
-                <!-- 动态生成职业状态 -->
+            <h2>当前可升级密探</h2>
+            <div class="status-columns">
+                <!-- 职业 -->
+                <div class="status-column profession-column">
+                    <h3>职业</h3>
+                    <div class="class-status" id="classStatus"></div>
+                </div>
+                
+                <!-- 属性 -->
+                <div class="status-column attribute-column">
+                    <h3>属性</h3>
+                    <div class="attribute-status" id="attributeStatus"></div>
+                </div>
             </div>
         </div>
         
@@ -57,6 +62,30 @@
             <div class="section-title">升级材料</div>
             <div class="resource-grid" id="materials-list">
                 <!-- 动态生成材料列表 -->
+            </div>
+        </div>
+        
+        <!-- 历练材料 -->
+        <div class="section">
+            <div class="section-title">历练材料</div>
+            <div class="training-container">
+                <!-- 风火历练 -->
+                <div class="training-category">
+                    <h3>风火历练</h3>
+                    <div id="windFireTraining"></div>
+                </div>
+
+                <!-- 地水历练 -->
+                <div class="training-category">
+                    <h3>地水历练</h3>
+                    <div id="earthWaterTraining"></div>
+                </div>
+
+                <!-- 阴阳历练 -->
+                <div class="training-category">
+                    <h3>阴阳历练</h3>
+                    <div id="yinYangTraining"></div>
+                </div>
             </div>
         </div>
         
