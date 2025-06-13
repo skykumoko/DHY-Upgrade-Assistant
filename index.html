@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>密探资源仓储单</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="resourceTracker">
+        <!-- 标题 -->
+        <div class="title-box">
+            <h1>密探资源仓储单</h1>
+        </div>
+
+        <!-- 状态面板 -->
+        <div class="status-board">
+            <h2>当前可升级密探：</h2>
+            <div class="class-status" id="classStatus">
+                <!-- 动态生成职业状态 -->
+            </div>
+        </div>
+        
+        <!-- 金钱及经验 -->
+        <div class="section">
+            <div class="section-title">金钱及经验</div>
+            <div class="resource-grid">
+                <div class="resource-item">
+                    <div class="resource-name">五铢钱 417万</div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="money-check">
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-name">经验值 2386300</div>
+                    <div class="checkbox-container">
+                        <div class="exp-status not-met" id="exp-status">未满足</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="book-inputs">
+                <div class="input-group">
+                    <label for="fragments">兵书残卷</label>
+                    <input type="number" id="fragments" min="0" value="0">
+                </div>
+                <div class="input-group">
+                    <label for="scrolls">兵书全卷</label>
+                    <input type="number" id="scrolls" min="0" value="0">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 升级材料 -->
+        <div class="section">
+            <div class="section-title">升级材料</div>
+            <div class="resource-grid" id="materials-list">
+                <!-- 动态生成材料列表 -->
+            </div>
+        </div>
+        
+        <div class="save-notice">
+            所有数据自动保存在您的设备中，无需联网
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

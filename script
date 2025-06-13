@@ -1,0 +1,270 @@
+const ResourceTracker = (() => {
+    const config = {
+        containerId: '#resourceTracker',
+        elements: {
+            classStatus: '#classStatus',
+            materialsList: '#materials-list',
+            moneyCheck: '#money-check',
+            fragments: '#fragments',
+            scrolls: '#scrolls',
+            expStatus: '#exp-status'
+        },
+        storageKey: 'DHY-Upgrade-Assistant_v1',
+        gistToken: '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', // GitHub个人访问令牌
+        gistId: null, // 第一次运行时自动创建
+        gistFilename: 'DHY-Upgrade-Assistant-data.json'
+    };
+
+    // 材料数据 - 简化版
+    const materialsData = [
+        // 80级突破材料
+        { id: 'fujunhaitang', name: '【府君海棠】*30', class: '诡道' },
+        { id: 'panlonggu', name: '【蟠龙鼓】*30', class: '神纪' },
+        { id: 'yinwendao', name: '【银纹刀】*30', class: '岐黄' },
+        { id: 'yuguidun', name: '【玉龟盾】*30', class: '龙盾' },
+        { id: 'xijiaogong', name: '【犀角弓】*30', class: '破军' },
+        // 70级突破材料
+        { id: 'menghunlan', name: '【梦魂兰】*30', class: '诡道' },
+        { id: 'zhentiangu', name: '【震天鼓】*30', class: '神纪' },
+        { id: 'qingtongdao', name: '【青铜刀】*30', class: '岐黄' },
+        { id: 'caiwendun', name: '【彩纹盾】*30', class: '龙盾' },
+        { id: 'tietaigong', name: '【铁胎弓】*30', class: '破军' },
+        // 通用1-100级升级材料
+        { id: 'zuigucao', name: '【醉骨草】*30', class: '通用' },
+        { id: 'qingtingyan', name: '【蜻蜓眼】*120', class: '通用' },
+        { id: 'ziyunying', name: '【紫云英】*160', class: '通用' },
+        { id: 'yingqiongyao', name: '【瑛琼瑶】*105', class: '通用' },
+        { id: 'jincuodao', name: '【金错刀】*80', class: '通用' },
+        { id: 'diguanghe', name: '【低光荷】*100', class: '通用' },
+        { id: 'yuanyu', name: '【鸢羽】*40', class: '通用' },
+        { id: 'jianjia', name: '【蒹葭】*494', class: '通用' }
+    ];
+    
+    // 职业数据
+    const classes = ['诡道', '神纪', '岐黄', '龙盾', '破军'];
+    const requiredExp = 2386300;
+    
+    const dom = {};
+    let state = {};
+
+    const init = () => {
+        console.log('🚀 密探资源系统启动...');
+        
+        try {
+            // 缓存DOM元素
+            dom.container = document.querySelector(config.containerId);
+            dom.classStatus = document.querySelector(config.elements.classStatus);
+            dom.materialsList = document.querySelector(config.elements.materialsList);
+            dom.moneyCheck = document.querySelector(config.elements.moneyCheck);
+            dom.fragments = document.querySelector(config.elements.fragments);
+            dom.scrolls = document.querySelector(config.elements.scrolls);
+            dom.expStatus = document.querySelector(config.elements.expStatus);
+
+            loadData();
+            bindEvents();
+            render();
+        } catch (error) {
+            showError('系统初始化失败，请刷新页面');
+            console.error('初始化错误:', error);
+        }
+    };
+
+    const loadData = async () => {
+        try {
+            const savedGistId = localStorage.getItem('gistId');
+            if (savedGistId) config.gistId = savedGistId;
+            
+            if (config.gistId && config.gistToken) {
+                const response = await fetch(`https://api.github.com/gists/${config.gistId}`, {
+                    headers: {
+                        'Authorization': `token ${config.gistToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.files && data.files[config.gistFilename]) {
+                    state = JSON.parse(data.files[config.gistFilename].content);
+                    return;
+                }
+            }
+            
+            // 回退到本地存储
+            const saved = localStorage.getItem(config.storageKey);
+            if (saved) {
+                state = JSON.parse(saved);
+            } else {
+                resetSystem();
+            }
+        } catch (e) {
+            console.warn('从Gist加载失败:', e);
+            const saved = localStorage.getItem(config.storageKey);
+            if (saved) {
+                state = JSON.parse(saved);
+            } else {
+                resetSystem();
+            }
+        }
+    };
+    
+    const resetSystem = () => {
+        state = {
+            moneyChecked: false,
+            fragments: 0,
+            scrolls: 0,
+            materials: {}
+        };
+        
+        // 初始化所有材料为未选中
+        materialsData.forEach(material => {
+            state.materials[material.id] = false;
+        });
+    };
+
+    const bindEvents = () => {
+        // 金钱复选框
+        dom.moneyCheck.addEventListener('change', () => {
+            state.moneyChecked = dom.moneyCheck.checked;
+            saveAndRender();
+        });
+        
+        // 兵书输入
+        dom.fragments.addEventListener('input', () => {
+            state.fragments = parseInt(dom.fragments.value) || 0;
+            updateExpStatus();
+            saveAndRender();
+        });
+        
+        dom.scrolls.addEventListener('input', () => {
+            state.scrolls = parseInt(dom.scrolls.value) || 0;
+            updateExpStatus();
+            saveAndRender();
+        });
+        
+        // 材料复选框（委托事件）
+        dom.materialsList.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox') {
+                const materialId = e.target.id.replace('-check', '');
+                state.materials[materialId] = e.target.checked;
+                saveAndRender();
+            }
+        });
+    };
+
+    const updateExpStatus = () => {
+        const currentExp = state.fragments * 100 + state.scrolls * 1000;
+        
+        if (currentExp >= requiredExp) {
+            dom.expStatus.textContent = '已满足';
+            dom.expStatus.className = 'exp-status met';
+        } else {
+            dom.expStatus.textContent = '未满足';
+            dom.expStatus.className = 'exp-status not-met';
+        }
+    };
+
+    const render = () => {
+        // 渲染职业状态
+        renderClassStatus();
+        
+        // 渲染材料列表
+        renderMaterials();
+        
+        // 更新UI状态
+        dom.moneyCheck.checked = state.moneyChecked;
+        dom.fragments.value = state.fragments;
+        dom.scrolls.value = state.scrolls;
+        updateExpStatus();
+    };
+    
+    const renderClassStatus = () => {
+        const expMet = dom.expStatus.textContent === '已满足';
+        
+        // 检查通用材料是否全部满足
+        const generalMaterials = materialsData.filter(m => m.class === '通用');
+        const allGeneralMet = generalMaterials.every(material => {
+            return state.materials[material.id];
+        });
+        
+        // 基础条件是否满足（金钱+经验+通用材料）
+        const baseConditionsMet = state.moneyChecked && expMet && allGeneralMet;
+        
+        // 生成职业状态HTML
+        dom.classStatus.innerHTML = classes.map(className => {
+            // 获取该职业的专属材料
+            const classMaterials = materialsData.filter(m => m.class === className);
+            const allClassMaterialsMet = classMaterials.every(material => {
+                return state.materials[material.id];
+            });
+            
+            const statusClass = baseConditionsMet && allClassMaterialsMet ? 'ready' : 'pending';
+            const statusText = baseConditionsMet && allClassMaterialsMet ? '可满级' : '待沉淀';
+            
+            return `
+                <div class="class-row">
+                    <div class="class-name">${className}</div>
+                    <div class="class-indicator ${statusClass}">${statusText}</div>
+                </div>
+            `;
+        }).join('');
+    };
+    
+    const renderMaterials = () => {
+        dom.materialsList.innerHTML = materialsData.map(material => {
+            const checked = state.materials[material.id] ? 'checked' : '';
+            return `
+                <div class="resource-item">
+                    <div class="resource-name">${material.name}</div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="${material.id}-check" ${checked}>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
+    const saveAndRender = () => {
+        saveData();
+        render();
+    };
+
+    const saveData = async () => {
+        try {
+            // 先保存到本地存储
+            localStorage.setItem(config.storageKey, JSON.stringify(state));
+            
+            // 如果有GitHub token，则尝试保存到Gist
+            if (!config.gistToken || config.gistToken === 'YOUR_GITHUB_TOKEN_HERE') {
+                console.log('未配置GitHub Token，仅使用本地存储');
+                return;
+            }
+            
+            const url = config.gistId 
+                ? `https://api.github.com/gists/${config.gistId}` 
+                : 'https://api.github.com/gists';
+                
+            const response = await fetch(url, {
+                method: config.gistId ? 'PATCH' : 'POST',
+                headers: {
+                    'Authorization': `token ${config.gistToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    description: 'Secret Agent Resources Data',
+                    public: false,
+                    files: {
+                        [config.gistFilename]: {
+                            content: JSON.stringify(state)
+                        }
+                    }
+                })
+            });
+            
+            const data = await response.json();
+            if (!config.gistId) {
+                config.gistId = data.id;
+                localStorage.setItem('gistId', data.id);
+            }
+        } catch (e) {
+            console.error('保存到Gist失败:', e);
+            // 回退到本地存储
+            localStorage.setItem(config.storageKey, JSON

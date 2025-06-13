@@ -1,0 +1,242 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Microsoft YaHei', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+#resourceTracker {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.title-box {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #4a6572;
+}
+
+.title-box h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.status-board {
+    background-color: #e8f4f8;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.status-board h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-size: 1.3rem;
+}
+
+.class-status {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.class-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: white;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.class-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.class-indicator {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    min-width: 85px;
+    text-align: center;
+}
+
+.pending {
+    background-color: #f39c12;
+    color: white;
+}
+
+.ready {
+    background-color: #27ae60;
+    color: white;
+}
+
+.section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+}
+
+.resource-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.resource-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: white;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.resource-name {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+}
+
+.exp-status {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    min-width: 85px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.not-met {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.met {
+    background-color: #27ae60;
+    color: white;
+}
+
+.book-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    flex: 1;
+    min-width: 0;
+}
+
+.input-group label {
+    margin-right: 15px;
+    font-weight: bold;
+    color: #2c3e50;
+    min-width: 100px;
+    white-space: nowrap;
+}
+
+input[type="number"] {
+    width: 100%;
+    max-width: 150px;
+    padding: 8px 12px;
+    border: 1px solid #3498db;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    text-align: right;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: #3498db;
+    cursor: pointer;
+}
+
+.save-notice {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+@media (max-width: 480px) {
+    #resourceTracker {
+        padding: 15px;
+    }
+    
+    .title-box h1 {
+        font-size: 1.6rem;
+    }
+    
+    .section {
+        padding: 15px;
+    }
+    
+    .book-inputs {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .input-group {
+        min-width: 100%;
+    }
+    
+    input[type="number"] {
+        max-width: 120px;
+    }
+    
+    .input-group label {
+        min-width: 80px;
+    }
+}
