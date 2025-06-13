@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>密探资源仓储单</title>
+    <title>密探升级助手</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="resourceTracker">
         <!-- 标题 -->
         <div class="title-box">
-            <h1>密探资源仓储单</h1>
+            <h1>密探升级助手</h1>
         </div>
 
         <!-- 状态面板 -->
@@ -41,12 +41,12 @@
             
             <div class="book-inputs">
                 <div class="input-group">
-                    <label for="fragments">兵书残卷</label>
-                    <input type="number" id="fragments" min="0" value="0">
-                </div>
-                <div class="input-group">
                     <label for="scrolls">兵书全卷</label>
                     <input type="number" id="scrolls" min="0" value="0">
+                </div>
+                <div class="input-group">
+                    <label for="fragments">兵书残卷</label>
+                    <input type="number" id="fragments" min="0" value="0">
                 </div>
             </div>
         </div>
@@ -59,8 +59,9 @@
             </div>
         </div>
         
-        <div class="save-notice">
-            所有数据自动保存在您的设备中，无需联网
+        <div class="footer-controls">
+            <div id="lastUpdated">最近更新：未记录</div>
+            <button id="resetButton" class="reset-btn">清空记录</button>
         </div>
     </div>
 
