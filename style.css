@@ -466,28 +466,42 @@ input[type="checkbox"] {
 /* ==================== 移动端适配 ==================== */
 @media (max-width: 600px) {
   #resourceTracker {
-    padding: 20px;
+    padding: 15px;
   }
-  
+  /* 1. 强制职业和属性卡片保持并排 */
   .status-columns {
-    flex-direction: column;
+    display: grid !important;  /* 覆盖原有flex布局 */
+    grid-template-columns: 1fr 1fr !important; /* 强制两列 */
+    gap: 12px;
   }
-  
-  .profession-column {
-    border-right: none;
-    border-bottom: 1px solid var(--gray-100);
+  .profession-column, 
+  .attribute-column {
+    min-width: 0; /* 防止内容溢出 */
   }
-  
+  /* 2. 历练操作按钮调整为2×2网格 */
   .training-actions {
-    flex-direction: column;
+    grid-template-columns: repeat(2, 1fr) !important; /* 改为2列 */
+    gap: 6px;
   }
-  
-  .circle {
-    width: 14px;
-    height: 14px;
+  .training-actions button {
+    padding: 6px 4px;
+    font-size: 0.75rem; /* 调小字体 */
+    white-space: nowrap; /* 防止文字换行 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* 其他移动端优化 */
+  .training-item {
+    padding: 12px 15px;
+  }
+  .resource-item {
+    padding: 10px 12px;
+  }
+  .book-inputs {
+    flex-direction: column;
+    gap: 12px;
   }
 }
-
 /* ==================== 微交互增强 ==================== */
 button {
   transition: transform 0.1s;
