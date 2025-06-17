@@ -15,6 +15,12 @@
     --gap-md: 1em;         /* 约16px */
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+    --yin-color: rgb(228, 213, 236);
+    --yang-color: rgb(255, 242, 206);
+    --feng-color: rgb(223, 255, 214);
+    --huo-color: rgb(255, 206, 206);
+    --di-color: rgb(230, 209, 174);
+    --shui-color: rgb(217, 235, 248);
   }
   
 * {
@@ -43,7 +49,7 @@ body {
   border: 1px solid var(--gray-100);
 }
 
-/* ==================== 状态面板 - 最终修正版 ==================== */
+/* ==================== 状态面板 ==================== */
 .status-board {
   background: transparent;
   border: none;
@@ -324,13 +330,14 @@ input[type="checkbox"] {
 
 .training-category-title {
   padding: 8px 12px;
-  background: var(--gray-50);
-  color: var(--black);
   font-size: 1rem;
   font-weight: 600;
-  border-bottom: 1px solid var(--gray-100);
-  margin-bottom: 12px;
-  border-radius: 4px;
+  border-radius: 2px 2px 0 0;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .training-item {
@@ -366,6 +373,22 @@ input[type="checkbox"] {
 
 .status-not-met {
   color: var(--gray-800);
+}
+
+/* 风火历练渐变 */
+.training-category:nth-child(1) .training-category-title {
+  background: linear-gradient(90deg, var(--feng-color),white, var(--huo-color));
+  color: #333;
+}
+/* 地水历练渐变 */
+.training-category:nth-child(2) .training-category-title {
+  background: linear-gradient(90deg, var(--di-color), white, var(--shui-color));
+  color: #333;
+}
+/* 阴阳历练渐变 */
+.training-category:nth-child(3) .training-category-title {
+  background: linear-gradient(90deg, var(--yin-color), white,  var(--yang-color));
+  color: #333;
 }
 
 /* 圆圈进度 - 精确显示 */
