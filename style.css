@@ -9,8 +9,10 @@
     --blue: #0071e3;
     --green: #34c759;
     --red: #ff3b30;
-    --radius-sm: 6px;
-    --radius-md: 12px;
+    --radius-sm: 0.5em;    /* 原6px */
+    --radius-md: 1em;      /* 原12px */
+    --gap-sm: 0.5em;       /* 约8px */
+    --gap-md: 1em;         /* 约16px */
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
   }
@@ -463,63 +465,61 @@ input[type="checkbox"] {
   background: rgba(255, 59, 48, 0.1);
 }
 
-/* ==================== 移动端适配 ==================== */
 @media (max-width: 600px) {
   /* 容器调整 */
   #resourceTracker {
-    padding: 12px;
-    border-radius: 12px;
+    padding: 3%;  /* 改用百分比 */
   }
 
-  /* 1. 职业/属性卡片强制并排 */
+  /* 1. 职业/属性卡片 - 弹性百分比布局 */
   .status-columns {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px;
+    grid-template-columns: 48% 48% !important; /* 留4%间隙 */
+    gap: 2%;
     padding: 0 !important;
   }
 
   .status-column {
+    padding: 3% !important;  /* 内边距百分比 */
     min-width: 0;
-    padding: 12px !important;
   }
 
-  /* 2. 历练按钮调整为2×2 */
-  .training-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-
-  .consume-btn, 
-  .undo-btn {
-    font-size: 0.7rem;
-    padding: 6px 2px;
-    min-height: 32px;
-  }
-
-  /* 其他优化 */
-  .training-category-title {
-    font-size: 0.9rem;
-  }
-
-  .training-name {
-    font-size: 0.85rem;
-  }
-
-  .sub-status-indicator {
-    font-size: 0.7rem;
-  }
-}
-
-/* 极窄屏幕额外优化 (如iPhone 5/SE等) */
-@media (max-width: 320px) {
-  .training-actions button {
-    font-size: 0.65rem;
+  /* 状态项文字适应 */
+  .status-item {
+    padding: 0.8em 0.5em;
   }
   
-  .status-column {
-    padding: 8px !important;
+  .status-indicator {
+    font-size: 0.7em;  /* 相对单位 */
+    padding: 0.3em 0.6em;
+    white-space: nowrap; /* 状态文字不换行 */
+  }
+
+  /* 2. 历练按钮优化 */
+  .training-actions {
+    grid-template-columns: repeat(2, 49%) !important;
+    gap: 1% 2%; /* 行间隙1%，列间隙2% */
+  }
+
+  .training-actions button {
+    font-size: 0.7em;
+    padding: 0.5em 0.2em;
+    min-height: 2.5em;
+  }
+
+  /* 3. 通用内容调整 */
+  .section {
+    margin-bottom: 2%;
+  }
+
+  .resource-item {
+    padding: 2% 3%;
+  }
+
+  .book-inputs {
+    gap: 2%;
   }
 }
+
 
 /* ==================== 微交互增强 ==================== */
 button {
