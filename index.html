@@ -13,19 +13,24 @@
         <div class="status-board">
             <h2>当前可升级密探</h2>
             <div class="status-columns">
-                <!-- 职业 -->
-                <div class="status-column profession-column">
-                    <h3>职业</h3>
-                    <div class="class-status" id="classStatus"></div>
+              <!-- 职业卡片 -->
+              <div class="status-column profession-column">
+                <h3>职业</h3>
+                <div class="class-status" id="classStatus">
+                  <!-- 动态生成职业状态 -->
                 </div>
-                
-                <!-- 属性 -->
-                <div class="status-column attribute-column">
-                    <h3>属性</h3>
-                    <div class="attribute-status" id="attributeStatus"></div>
+              </div>
+              
+              <!-- 属性卡片 -->
+              <div class="status-column attribute-column">
+                <h3>属性</h3>
+                <div class="attribute-status" id="attributeStatus">
+                  <!-- 动态生成属性状态 -->
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
+          
         
         <!-- 金钱及经验 -->
         <div class="section">
@@ -46,13 +51,13 @@
             </div>
             
             <div class="book-inputs">
-                <div class="input-group">
-                    <label for="scrolls">兵书全卷</label>
-                    <input type="number" id="scrolls" min="0" value="0">
+                <div class="input-group purple">
+                    <label for="bingshu_quanjuan">兵书全卷</label>
+                    <input type="number" id="bingshu_quanjuan" min="0" value="0">
                 </div>
-                <div class="input-group">
-                    <label for="fragments">兵书残卷</label>
-                    <input type="number" id="fragments" min="0" value="0">
+                <div class="input-group blue">
+                    <label for="bingshu_canjuan">兵书残卷</label>
+                    <input type="number" id="bingshu_canjuan" min="0" value="0">
                 </div>
             </div>
         </div>
@@ -71,19 +76,19 @@
             <div class="training-container">
                 <!-- 风火历练 -->
                 <div class="training-category">
-                    <h3>风火历练</h3>
+                    <div class="training-category-title">风火历练</div>
                     <div id="windFireTraining"></div>
                 </div>
 
                 <!-- 地水历练 -->
                 <div class="training-category">
-                    <h3>地水历练</h3>
+                    <div class="training-category-title">地水历练</div>
                     <div id="earthWaterTraining"></div>
                 </div>
 
                 <!-- 阴阳历练 -->
                 <div class="training-category">
-                    <h3>阴阳历练</h3>
+                    <div class="training-category-title">阴阳历练</div>
                     <div id="yinYangTraining"></div>
                 </div>
             </div>
