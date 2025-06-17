@@ -465,43 +465,62 @@ input[type="checkbox"] {
 
 /* ==================== 移动端适配 ==================== */
 @media (max-width: 600px) {
+  /* 容器调整 */
   #resourceTracker {
-    padding: 15px;
+    padding: 12px;
+    border-radius: 12px;
   }
-  /* 1. 强制职业和属性卡片保持并排 */
+
+  /* 1. 职业/属性卡片强制并排 */
   .status-columns {
-    display: grid !important;  /* 覆盖原有flex布局 */
-    grid-template-columns: 1fr 1fr !important; /* 强制两列 */
-    gap: 12px;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px;
+    padding: 0 !important;
   }
-  .profession-column, 
-  .attribute-column {
-    min-width: 0; /* 防止内容溢出 */
+
+  .status-column {
+    min-width: 0;
+    padding: 12px !important;
   }
-  /* 2. 历练操作按钮调整为2×2网格 */
+
+  /* 2. 历练按钮调整为2×2 */
   .training-actions {
-    grid-template-columns: repeat(2, 1fr) !important; /* 改为2列 */
-    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  .training-actions button {
-    padding: 6px 4px;
-    font-size: 0.75rem; /* 调小字体 */
-    white-space: nowrap; /* 防止文字换行 */
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+  .consume-btn, 
+  .undo-btn {
+    font-size: 0.7rem;
+    padding: 6px 2px;
+    min-height: 32px;
   }
-  /* 其他移动端优化 */
-  .training-item {
-    padding: 12px 15px;
+
+  /* 其他优化 */
+  .training-category-title {
+    font-size: 0.9rem;
   }
-  .resource-item {
-    padding: 10px 12px;
+
+  .training-name {
+    font-size: 0.85rem;
   }
-  .book-inputs {
-    flex-direction: column;
-    gap: 12px;
+
+  .sub-status-indicator {
+    font-size: 0.7rem;
   }
 }
+
+/* 极窄屏幕额外优化 (如iPhone 5/SE等) */
+@media (max-width: 320px) {
+  .training-actions button {
+    font-size: 0.65rem;
+  }
+  
+  .status-column {
+    padding: 8px !important;
+  }
+}
+
 /* ==================== 微交互增强 ==================== */
 button {
   transition: transform 0.1s;
