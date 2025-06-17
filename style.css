@@ -465,58 +465,64 @@ input[type="checkbox"] {
   background: rgba(255, 59, 48, 0.1);
 }
 
+/* ==================== 移动端专属优化 ==================== */
 @media (max-width: 600px) {
-  /* 容器调整 */
-  #resourceTracker {
-    padding: 3%;  /* 改用百分比 */
-  }
-
-  /* 1. 职业/属性卡片 - 弹性百分比布局 */
+  /* 1. 职业属性卡片布局重构 */
   .status-columns {
-    grid-template-columns: 48% 48% !important; /* 留4%间隙 */
-    gap: 2%;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 0.5rem;
     padding: 0 !important;
+    margin: 0 -0.5rem; /* 负边距补偿 */
   }
 
   .status-column {
-    padding: 3% !important;  /* 内边距百分比 */
+    padding: 0.75rem !important;
     min-width: 0;
+    overflow: hidden; /* 防止内容溢出 */
   }
 
-  /* 状态项文字适应 */
+  /* 2. 内容压缩优化 */
   .status-item {
-    padding: 0.8em 0.5em;
-  }
-  
-  .status-indicator {
-    font-size: 0.7em;  /* 相对单位 */
-    padding: 0.3em 0.6em;
-    white-space: nowrap; /* 状态文字不换行 */
+    padding: 0.5rem;
+    flex-wrap: nowrap;
   }
 
-  /* 2. 历练按钮优化 */
+  .status-item > span:first-child {
+    font-size: clamp(12px, 3.5vw, 14px); /* 动态字体 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%;
+  }
+
+  .status-indicator {
+    font-size: clamp(10px, 3vw, 12px);
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* 3. 历练按钮终极方案 */
   .training-actions {
-    grid-template-columns: repeat(2, 49%) !important;
-    gap: 1% 2%; /* 行间隙1%，列间隙2% */
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.5rem;
   }
 
   .training-actions button {
-    font-size: 0.7em;
-    padding: 0.5em 0.2em;
-    min-height: 2.5em;
+    font-size: clamp(10px, 3vw, 12px);
+    padding: 0.4rem 0.2rem;
+    line-height: 1.2;
   }
+}
 
-  /* 3. 通用内容调整 */
-  .section {
-    margin-bottom: 2%;
+/* 超小屏幕应急处理 (iPhone 5/SE等) */
+@media (max-width: 340px) {
+  .status-item > span:first-child {
+    max-width: 50%;
   }
-
-  .resource-item {
-    padding: 2% 3%;
-  }
-
-  .book-inputs {
-    gap: 2%;
+  
+  .training-actions button {
+    font-size: 0.6rem;
   }
 }
 
