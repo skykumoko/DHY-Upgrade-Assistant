@@ -1,62 +1,170 @@
-/* ==================== 基础重置 ==================== */
+/* ==================== 基础变量定义 ==================== */
+/* 定义项目中使用的颜色、尺寸等变量 */
 :root {
-    --white: #ffffff;
-    --gray-50: #f5f5f7;
-    --gray-100: #e5e5e5;
-    --gray-200: #d2d2d7;
-    --gray-800: #424245;
-    --black: #1d1d1f;
-    --blue: #0071e3;
-    --green: #34c759;
-    --red: #ff3b30;
-    --radius-sm: 0.5em;    /* 原6px */
-    --radius-md: 1em;      /* 原12px */
-    --gap-sm: 0.5em;       /* 约8px */
-    --gap-md: 1em;         /* 约16px */
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
-    --yin-color: rgb(228, 213, 236);
-    --yang-color: rgb(255, 242, 206);
-    --feng-color: rgb(223, 255, 214);
-    --huo-color: rgb(255, 206, 206);
-    --di-color: rgb(230, 209, 174);
-    --shui-color: rgb(217, 235, 248);
-  }
+  /* 中性色 */
+  --white: #ffffff;
+  --gray-50: #f5f5f7;    /* 最浅灰色，用于背景 */
+  --gray-100: #e5e5e5;   /* 边框和分割线 */
+  --gray-200: #d2d2d7;   /* 输入框边框 */
+  --gray-800: #424245;   /* 次要文字 */
+  --black: #1d1d1f;      /* 主要文字颜色 */
   
+  /* 主题色 */
+  --blue: #0071e3;       /* 主要操作按钮 */
+  --green: #34c759;      /* 成功状态 */
+  --red: #ff3b30;        /* 错误/危险操作 */
+  
+  /* 尺寸变量 */
+  --radius-sm: 0.5em;    /* 小圆角，用于按钮等 */
+  --radius-md: 1em;      /* 中等圆角，用于卡片 */
+  --gap-sm: 0.5em;       /* 小间距，8px左右 */
+  --gap-md: 1em;         /* 中等间距，16px左右 */
+  
+  /* 阴影效果 */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);  /* 小阴影 */
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.05); /* 中等阴影 */
+  
+  /* 六属性主题色 */
+  --yin-color: rgb(228, 213, 236);   /* 阴 */
+  --yang-color: rgb(255, 242, 206);  /* 阳 */
+  --feng-color: rgb(223, 255, 214);  /* 风 */
+  --huo-color: rgb(255, 206, 206);   /* 火 */
+  --di-color: rgb(230, 209, 174);    /* 地 */
+  --shui-color: rgb(217, 235, 248);  /* 水 */
+}
+
+/* ==================== 全局重置 ==================== */
+/* 清除默认样式，设置全局属性 */
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box; /* 使padding和border包含在元素尺寸内 */
+  -webkit-font-smoothing: antialiased; /* 字体抗锯齿，使文字更清晰 */
 }
-
 body {
   background-color: var(--gray-50);
   color: var(--black);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
-  padding: 20px;
+  line-height: 1.25;       /* 行高1.25倍，提高可读性 */
+  padding: 20px;          /* 页面四周留白 */
+}
+
+/* ==================== 目标密探标记 ==================== */
+.target-section {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-100);
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  width: 100%; 
+  max-width: 800px; 
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.target-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--black);
+  text-align: center;
+}
+.target-row {
+  display: flex;
+  flex-wrap: wrap; /* 允许换行 */
+  align-items: center;
+  gap: 8px 16px; /* 行间距 列间距 */
+  margin-bottom: 12px;
+}
+.target-label {
+  font-weight: 500;
+  color: var(--gray-800);
+  flex-shrink: 0; /* 防止标签被压缩 */
+}
+.target-option {
+  position: relative;
+  padding: 3px 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+/* 职业背景色 */
+.target-option.guidao,
+.target-option.shenji,
+.target-option.qihuang,
+.target-option.longdun,
+.target-option.pojun {
+  background: rgb(255, 247, 231);
+}
+/* 属性背景色 */
+.target-option.yin { background-color: var(--yin-color); }
+.target-option.yang { background-color: var(--yang-color); }
+.target-option.feng { background-color: var(--feng-color); }
+.target-option.huo { background-color: var(--huo-color); }
+.target-option.di { background-color: var(--di-color); }
+.target-option.shui { background-color: var(--shui-color); }
+/* 隐藏默认复选框 */
+.target-option input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* 自定义选中标记 - 小圆点 */
+.target-option input[type="checkbox"]:checked + .target-text::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--black);
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.target-text {
+  font-weight: 500;
+  color: var(--black);
+}
+/* 悬停效果 */
+.target-option:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+/* 选中状态加深背景色 */
+.target-option input[type="checkbox"]:checked + .target-text {
+  font-weight: 600;
+}
+.target-option.guidao input[type="checkbox"]:checked + .target-text::after {
+  background: #5a2d82;
+}
+.target-option.shenji input[type="checkbox"]:checked + .target-text::after {
+  background: #3a5f8a;
 }
 
 /* ==================== 主容器 ==================== */
 #resourceTracker {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 800px;       /* 最大宽度限制 */
+  margin: 0 auto;         /* 水平居中 */
   background: var(--white);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
-  padding: 30px;
-  border: 1px solid var(--gray-100);
+  padding: 20px;          /* 内边距 */
+  border: 1px solid var(--gray-100); /* 浅灰色边框 */
 }
 
 /* ==================== 状态面板 ==================== */
 .status-board {
   background: transparent;
   border: none;
-  margin-bottom: 30px;
+  margin-bottom: 30px;    /* 底部外边距 */
   padding-bottom: 0;
 }
-
+/* 状态面板标题 */
 .status-board h2 {
   margin-bottom: 16px;
   border-radius: var(--radius-md);
@@ -64,78 +172,73 @@ body {
   background: var(--gray-50);
   padding: 16px;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.2rem;      /* 19.2px (基于默认16px) */
   color: var(--black);
 }
-
+/* 状态列容器 */
 .status-columns {
-  display: flex;
-  gap: 16px;
+  display: flex;          /* 弹性布局 */
+  gap: 16px;              /* 列间距 */
   padding: 0;
 }
-
-/* 职业/属性卡片通用样式 */
+/* 单个状态列（职业/属性） */
 .status-column {
-  flex: 1;
+  flex: 1;                /* 等分剩余空间 */
   background: var(--white);
   border-radius: var(--radius-md);
   border: 1px solid var(--gray-100);
   padding: 16px;
   box-shadow: var(--shadow-sm);
 }
-
+/* 状态列标题 */
 .status-column h3 {
   text-align: center;
-  padding: 2px 0 8px;
-  font-size: 1em;
-  font-weight: 600;
+  padding: 2px 0 8px;     /* 上 左右 下 */
+  font-size: 1em;         /* 继承父级大小 */
+  font-weight: 600;       /* 半粗体 */
   color: var(--black);
 }
-
-/* 状态项容器 */
+/* 状态项容器（职业/属性列表） */
 .class-status,
 .attribute-status {
-  display: grid;
-  gap: 12px;
+  display: grid;          /* 网格布局 */
+  gap: 12px;              /* 项间距 */
 }
-
-/* 单个状态项  */
+/* 单个状态项 */
 .status-item {
   padding: 12px;
   border-radius: var(--radius-sm);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* 两端对齐 */
+  align-items: center;    /* 垂直居中 */
   border: 1px solid var(--gray-100);
   color: var(--black);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease; /* 背景色过渡动画 */
 }
-
-/* 职业颜色定义 */
+/* 职业项背景色 */
 .status-item.guidao,
 .status-item.shenji,
 .status-item.qihuang,
 .status-item.longdun,
 .status-item.pojun {
-  background: rgb(255, 247, 231);
+  background: rgb(255, 247, 231); /* 浅黄色背景 */
 }
-
+/* 职业项悬停效果 */
 .status-item.guidao:hover,
 .status-item.shenji:hover,
 .status-item.qihuang:hover,
 .status-item.longdun:hover,
 .status-item.pojun:hover {
-  background-color: rgb(252, 237, 206);
+  background-color: rgb(252, 237, 206); /* 稍深的黄色 */
 }
-
-/* 属性颜色定义 */
-.status-item.yin { background-color: rgb(228, 213, 236); }
-.status-item.yang { background-color: rgb(255, 242, 206); }
-.status-item.feng { background-color: rgb(223, 255, 214); }
-.status-item.huo { background-color: rgb(255, 206, 206); }
-.status-item.di { background-color: rgb(230, 209, 174); }
-.status-item.shui { background-color: rgb(217, 235, 248); }
-
+/* 属性背景色 */
+.status-item.yin { background-color: var(--yin-color); }
+.status-item.yang { background-color: var(--yang-color); }
+.status-item.feng { background-color: var(--feng-color); }
+.status-item.huo { background-color: var(--huo-color); }
+.status-item.di { background-color: var(--di-color); }
+.status-item.shui { background-color: var(--shui-color); }
+/* 属性悬停效果 */
 .status-item.yin:hover { background-color: rgb(219, 200, 230); }
 .status-item.yang:hover { background-color: rgb(241, 227, 187); }
 .status-item.feng:hover { background-color: rgb(208, 247, 197); }
@@ -144,56 +247,62 @@ body {
 .status-item.shui:hover { background-color: rgb(201, 223, 238); }
 
 
-/* 总状态指示器 */
+/* ==================== 指示器 ==================== */
+/* 状态指示器（主状态） */
 .status-indicator {
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 12px;    /* 圆形 */
+  font-size: 0.8rem;      /* 12.8px */
   font-weight: 500;
   color: var(--black);
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  background: var(--white) ;
-  isolation: isolate;
+  background: var(--white);
+  isolation: isolate;     /* 创建新的层叠上下文 */
   position: relative; 
   z-index: 1; 
 }
-
-/* 子类状态指示器 - 用于经验值和历练 */
+/* 子状态指示器（经验值/历练） */
 .sub-status-indicator {
-  padding: 2px 10px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--gray-800); 
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--white);
+  min-width: 80px; 
+    width: auto; 
+    height: 28px; 
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
-
+/* 达成状态样式 */
 .status-indicator.ready,
 .sub-status-indicator.met {
-  background: rgb(220, 255, 229);
+  background: rgb(220, 255, 229); /* 浅绿色 */
   border-color: rgba(52, 199, 89, 0.3);
+  border: 1px solid var(--green-300);
 }
-
+/* 未达成状态样式 */
 .status-indicator.pending,
 .sub-status-indicator.not-met {
-  background: rgb(255, 214, 212);
+  background: rgb(255, 214, 212); /* 浅红色 */
   border-color: rgba(255, 59, 48, 0.3);
+  border: 1px solid var(--green-300);
 }
 
 /* ==================== 内容区块 ==================== */
 .section {
-  margin-bottom: 24px;
+  margin-bottom: 24px;    /* 区块间距 */
   background: var(--white);
   border-radius: var(--radius-md);
   border: 1px solid var(--gray-100);
-  overflow: hidden;
+  overflow: hidden;       /* 防止内容溢出圆角 */
 }
-
+/* 区块标题 */
 .section-title {
   padding: 16px 20px;
-  font-size: 1.1rem;
+  font-size: 1.1rem;      /* 17.6px */
   font-weight: 600;
   background: var(--gray-50);
   border-bottom: 1px solid var(--gray-100);
@@ -202,10 +311,10 @@ body {
 /* ==================== 资源列表 ==================== */
 .resource-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1px;
+  grid-template-columns: 1fr; /* 单列布局 */
+  gap: 1px;               /* 项间距 */
 }
-
+/* 资源项 */
 .resource-item {
   display: flex;
   justify-content: space-between;
@@ -213,28 +322,24 @@ body {
   padding: 14px 20px;
   background: var(--white);
 }
-
+/* 资源名称 */
 .resource-name {
-  font-weight: 500;
+  font-weight: 500;       /* 中等粗细 */
 }
-
-/* 材料等级颜色 */
+/* 材料等级颜色标识 */
 .resource-item.gold {
-  background-color: rgba(255, 237, 159, 0.5); /* 金色 */
-  border-left: 4px solid #D4AF37;
+  background-color: rgba(255, 237, 159, 0.5); /* 金色半透明 */
+  border-left: 4px solid #D4AF37; /* 金色边框 */
 }
-
 .resource-item.purple {
-  background-color: rgba(255, 161, 235, 0.5); /* 紫色 */
-  border-left: 4px solid #800080;
+  background-color: rgba(255, 161, 235, 0.5); /* 紫色半透明 */
+  border-left: 4px solid #800080; /* 紫色边框 */
 }
-
 .resource-item.blue {
-  background-color: rgba(186, 214, 255, 0.5); /* 蓝色 */
-  border-left: 4px solid #1E90FF;
+  background-color: rgba(186, 214, 255, 0.5); /* 蓝色半透明 */
+  border-left: 4px solid #1E90FF; /* 蓝色边框 */
 }
-
-/* 材料列表布局调整 */
+/* 资源项布局调整 */
 .resource-item {
   display: flex;
   justify-content: space-between;
@@ -243,81 +348,99 @@ body {
   margin-bottom: 8px;
   border-radius: 4px;
   transition: all 0.2s ease;
-  border-left: 4px solid transparent;
+  border-left: 4px solid transparent; /* 默认无边框 */
 }
-
 
 /* ==================== 输入控件 ==================== */
 .book-inputs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  flex-wrap: wrap;        /* 允许换行 */
+  gap: 1rem;              /* 输入组间距 */
   padding: 16px 20px;
 }
-
+/* 输入组容器 */
 .input-group {
-  flex: 1;
-  min-width: 0;
+  flex: 1;                /* 自动填充空间 */
+  min-width: 0;           /* 防止内容溢出 */
 }
-
+/* 输入标签 */
 .input-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.9rem;
+  display: block;         /* 独占一行 */
+  margin-bottom: 6px;     /* 与输入框间距 */
+  font-size: 0.9rem;      /* 14.4px */
   color: var(--gray-800);
 }
-
+/* 输入框通用样式 */
 input[type="number"],
 input[type="text"] {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid var(--gray-200);
   border-radius: var(--radius-sm);
-  font-size: 1rem;
+  font-size: 1rem;        /* 16px */
 }
-
+/* 复选框样式 */
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  accent-color: var(--blue);
+  accent-color: var(--blue); /* 选中颜色 */
 }
-
-/* 输入组颜色标识 */
+/* 紫色输入组 */
 .input-group.purple {
   background-color: rgba(255, 161, 235, 0.5);
   border-left: 4px solid #800080;
   border-radius: var(--radius-sm);
   padding: 12px;
 }
+/* 蓝色输入组 */
 .input-group.blue {
   background-color: rgba(186, 214, 255, 0.5);
   border-left: 4px solid #1E90FF;
   border-radius: var(--radius-sm);
   padding: 12px;
 }
-/* 输入组标签样式 */
+/* 紫色标签 */
 .input-group.purple label {
-  color: #5a2d82;
+  color: #5a2d82;         /* 深紫色 */
   font-weight: 600;
 }
+/* 蓝色标签 */
 .input-group.blue label {
-  color: #1a5d8a;
+  color: #1a5d8a;         /* 深蓝色 */
   font-weight: 600;
 }
-/* 输入框样式 */
+/* 输入框内部样式 */
 .input-group input[type="number"] {
   background-color: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  margin-top: 8px;
+  margin-top: 8px;        /* 与标签间距 */
 }
 
 /* ==================== 历练模块 ==================== */
+/* 次数输入 */
+.training-input-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.training-count-input {
+  color: #575757;
+  width: 60px !important; 
+  height: 28px; 
+  padding: 4px 6px;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px!important;
+  text-align: right;
+  font-size: 14px!important;
+  box-sizing: border-box; 
+}
+/* 主容器 */
 .training-container {
   display: grid;
-  gap: 16px;
-  padding: 0 20px 20px;
+  gap: 16px;              /* 分类间距 */
+  padding: 0 20px 20px;   /* 左右下内边距 */
 }
-
+/* 历练分类容器 */
 .training-category {
   background: var(--white);
   border: 1px solid var(--gray-100);
@@ -325,40 +448,41 @@ input[type="checkbox"] {
   padding: 0;
   margin-top: 16px;
   margin-bottom: 10px;
-  overflow: hidden;
+  overflow: hidden;       /* 隐藏溢出内容 */
 }
-
+/* 分类标题 */
 .training-category-title {
   padding: 8px 12px;
-  font-size: 1rem;
+  font-size: 1rem;        /* 16px */
   font-weight: 600;
-  border-radius: 2px 2px 0 0;
+  border-radius: 2px 2px 0 0; /* 只圆角上方 */
   text-shadow: 0 1px 1px rgba(255,255,255,0.3);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
-
+/* 单个历练项 */
 .training-item {
   padding: 16px 20px;
   border-bottom: 1px solid var(--gray-50);
 }
-
+/* 最后一个历练项去除边框 */
 .training-item:last-child {
   border-bottom: none;
 }
-
+/* 历练头部（名称+状态） */
 .training-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  align-items: center;
+  margin-bottom: 8px;
 }
-
+/* 历练名称 */
 .training-name {
   font-weight: 500;
 }
-
+/* 历练状态 */
 .training-status {
   font-size: 0.9rem;
   font-weight: 500;
@@ -366,202 +490,246 @@ input[type="checkbox"] {
   padding: 2px 10px;
   border-radius: 12px;
 }
-
+/* 达成状态文字颜色 */
 .status-met {
   color: var(--green);
 }
-
+/* 未达成状态文字颜色 */
 .status-not-met {
   color: var(--gray-800);
 }
-
-/* 风火历练渐变 */
+/* 风火历练标题渐变 */
 .training-category:nth-child(1) .training-category-title {
-  background: linear-gradient(90deg, var(--feng-color),white, var(--huo-color));
+  background: linear-gradient(90deg, var(--feng-color), white, var(--huo-color));
   color: #333;
 }
-/* 地水历练渐变 */
+/* 地水历练标题渐变 */
 .training-category:nth-child(2) .training-category-title {
   background: linear-gradient(90deg, var(--di-color), white, var(--shui-color));
   color: #333;
 }
-/* 阴阳历练渐变 */
+/* 阴阳历练标题渐变 */
 .training-category:nth-child(3) .training-category-title {
-  background: linear-gradient(90deg, var(--yin-color), white,  var(--yang-color));
+  background: linear-gradient(90deg, var(--yin-color), white, var(--yang-color));
   color: #333;
 }
-
-/* 圆圈进度 - 精确显示 */
+/* 进度圆圈容器 */
 .circles-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 12px 0;
+  flex-wrap: wrap;        /* 允许换行 */
+  gap: 6px;               /* 圆圈间距 */
+  margin: 10px 0;
 }
-
+/* 圆圈行 */
 .circles-row {
   display: flex;
   gap: 6px;
+  margin-bottom: 6px;
 }
-
+/* 单个圆圈 */
 .circle {
   width: 16px;
   height: 16px;
-  border-radius: 50%;
+  border-radius: 50%;     /* 圆形 */
   border: 1px solid var(--gray-200);
-  transition: all 0.2s;
+  transition: all 0.2s;   /* 状态变化动画 */
 }
-
+/* 已填充的圆圈 */
 .circle.filled {
   background: var(--blue);
   border-color: var(--blue);
-  transform: scale(1.1);
+  transform: scale(1.1);  /* 轻微放大效果 */
 }
 
-/* ==================== 按钮 ==================== */
-/* 更新历练操作按钮样式 */
+/* ==================== 按钮样式 ==================== */
+
+/* 历练操作按钮容器 */
 .training-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-top: 12px;
+  all: unset;             /* 重置所有继承样式 */
+  display: flex;
+  gap: 8px;               /* 按钮间距 */
+  width: 100%;            /* 占满容器宽度 */
 }
+
+/* 按钮基础样式 */
 .training-actions button {
-  padding: 8px;
+  padding: 8px 12px;
+  min-width: 0;           /* 允许宽度缩小 */
+  white-space: nowrap;    /* 禁止文字换行 */
+  overflow: visible;      /* 显示溢出内容 */
   border: none;
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
   text-align: center;
+  transition: all 0.2s;   /* 悬停动画 */
+  flex: 1 1 auto;         /* 自动伸缩 */
+  cursor: pointer;        /* 手型指针 */
 }
-/* 核销按钮样式 */
+
+/* 核销按钮（主操作按钮） */
 .consume-btn {
   background: var(--blue);
   color: white;
 }
+
+/* 禁用状态的核销按钮 */
 .consume-btn:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+  cursor: not-allowed;    /* 禁用指针 */
+  background: var(--blue); /* 保持颜色一致 */
 }
+
+/* 核销按钮悬停效果 */
 .consume-btn:not(:disabled):hover {
-  background: #0062c4;
+  background: #0062c4;    /* 深蓝色 */
+  box-shadow: var(--shadow-sm); /* 添加阴影 */
 }
-/* 撤销按钮样式 */
+
+/* 核销按钮点击效果 */
+.consume-btn:active {
+  transform: scale(0.98); /* 轻微缩小 */
+}
+
+/* 撤销按钮（次要操作按钮） */
 .undo-btn {
   background: var(--gray-100);
   color: var(--black);
 }
+
+/* 禁用状态的撤销按钮 */
 .undo-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background: var(--gray-100);
 }
+
+/* 撤销按钮悬停效果 */
 .undo-btn:not(:disabled):hover {
   background: var(--gray-200);
+  box-shadow: var(--shadow-sm);
 }
 
-/* ==================== 页脚 ==================== */
-.footer-controls {
-  padding: 20px 0 0;
-  text-align: center;
+/* 撤销按钮点击效果 */
+.undo-btn:active {
+  transform: scale(0.98);
 }
 
-#lastUpdated {
-  color: var(--gray-800);
-  font-size: 0.8rem;
-  margin-bottom: 12px;
-}
-
+/* 页脚重置按钮 */
 .reset-btn {
   background: transparent;
   color: var(--red);
   border: 1px solid var(--red);
-  padding: 8px 16px;
+  padding: 4px 12px;
   border-radius: var(--radius-sm);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
+/* 重置按钮悬停效果 */
 .reset-btn:hover {
-  background: rgba(255, 59, 48, 0.1);
+  background: rgba(255, 59, 48, 0.1); /* 浅红色背景 */
 }
 
-/* ==================== 移动端专属优化 ==================== */
-@media (max-width: 600px) {
-  /* 1. 职业属性卡片布局重构 */
-  .status-columns {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-    gap: 0.5rem;
-    padding: 0 !important;
-    margin: 0 -0.5rem; /* 负边距补偿 */
-  }
-
-  .status-column {
-    padding: 0.75rem !important;
-    min-width: 0;
-    overflow: hidden; /* 防止内容溢出 */
-  }
-
-  /* 2. 内容压缩优化 */
-  .status-item {
-    padding: 0.5rem;
-    flex-wrap: nowrap;
-  }
-
-  .status-item > span:first-child {
-    font-size: clamp(12px, 3.5vw, 14px); /* 动态字体 */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 60%;
-  }
-
-  .status-indicator {
-    font-size: clamp(10px, 3vw, 12px);
-    padding: 0.25rem 0.5rem;
-    white-space: nowrap;
-  }
-
-  /* 3. 历练按钮终极方案 */
-  .training-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0.5rem;
-  }
-
-  .training-actions button {
-    font-size: clamp(10px, 3vw, 12px);
-    padding: 0.4rem 0.2rem;
-    line-height: 1.2;
-  }
-}
-
-/* 超小屏幕应急处理 (iPhone 5/SE等) */
-@media (max-width: 340px) {
-  .status-item > span:first-child {
-    max-width: 50%;
-  }
-  
-  .training-actions button {
-    font-size: 0.6rem;
-  }
-}
-
-
-
-/* ==================== 微交互增强 ==================== */
-button {
-  transition: transform 0.1s;
-}
-
-button:active {
+/* 重置按钮点击效果 */
+.reset-btn:active {
   transform: scale(0.98);
 }
 
-.resource-item {
-  transition: background 0.2s;
+.footer-controls {
+  max-width: 800px; /* 与主容器同宽 */
+  margin: 0 auto; /* 水平居中 */
+  padding: 20px;
+  text-align: center; /* 内容居中 */
+}
+#lastUpdated {
+  text-align: center;
+  display: block; /* 确保居中生效 */
+  padding: 6px;
 }
 
+/* ==================== 按钮布局响应式 ==================== */
+
+/* PC端布局（宽度>600px） */
+@media (min-width: 601px) {
+  .training-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  
+  .training-actions button {
+    width: auto !important; /* 自动宽度 */
+    max-width: none !important; /* 取消最大宽度限制 */
+    flex: 1 1 0 !important; /* 等分空间 */
+  }
+}
+
+/* 移动端布局（宽度≤600px） */
+@media (max-width: 600px) {
+  .training-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important; /* 2列网格 */
+  }
+  
+  .training-actions button {
+    width: 100% !important; /* 占满网格单元格 */
+  }
+
+  .training-count-input {
+    width: 40px !important;  /* 移动端更窄 */
+    border-radius: 6px!important;
+    text-align: right;
+    font-size: 12px!important;
+    padding: 2px 4px !important; /* 减少内边距 */
+  }
+  
+  .sub-status-indicator {
+    min-width: 60px !important; /* 缩短状态框 */
+    font-size: 12px !important;
+    padding: 2px 4px !important;
+  }
+
+}
+
+/* 超小屏幕优化（宽度≤340px） */
+@media (max-width: 340px) {
+  .training-actions button {
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+  }
+}
+
+/* Edge浏览器专属修复 */
+@supports (-ms-ime-align:auto) {
+  .training-actions {
+    display: -ms-flexbox !important;
+    -ms-flex-wrap: nowrap !important;
+  }
+  .training-actions button {
+    -ms-flex: 1 0 auto !important;
+    width: 100% !important;
+  }
+}
+
+/* ==================== 按钮微交互 ==================== */
+button {
+  transition: 
+    transform 0.1s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease; /* 平滑过渡效果 */
+}
+
+button:active {
+  transform: scale(0.98); /* 点击时轻微缩小 */
+  box-shadow: none !important; /* 移除阴影 */
+}
+
+/* 禁用按钮的悬停效果 */
+button:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
 

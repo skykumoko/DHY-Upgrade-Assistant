@@ -69,25 +69,25 @@ const ResourceTracker = (() => {
         // 历练配置
         training: {
             windFire: [
-                { name: '【历练 · 四】', required: 6 },
-                { name: '【历练 · 六】', required: 12 },
-                { name: '【历练 · 八】', required: 24 },
-                { name: '【历练 · 十】', required: 35 },
-                { name: '【历练 · 十二】', required: 47 }
+                { name: '【历练·四】', required: 6, editable: true },
+                { name: '【历练·六】', required: 12, editable: true },
+                { name: '【历练·八】', required: 24, editable: true },
+                { name: '【历练·十】', required: 35, editable: true },
+                { name: '【历练·十二】', required: 47, editable: true }
             ],
             earthWater: [
-                { name: '【历练 · 四】', required: 6 },
-                { name: '【历练 · 六】', required: 12 },
-                { name: '【历练 · 八】', required: 24 },
-                { name: '【历练 · 十】', required: 35 },
-                { name: '【历练 · 十二】', required: 47 }
+                { name: '【历练·四】', required: 6, editable: true },
+                { name: '【历练·六】', required: 12, editable: true },
+                { name: '【历练·八】', required: 24, editable: true },
+                { name: '【历练·十】', required: 35, editable: true },
+                { name: '【历练·十二】', required: 47, editable: true }
             ],
             yinYang: [
-                { name: '【历练 · 四】', required: 6 },
-                { name: '【历练 · 六】', required: 12 },
-                { name: '【历练 · 八】', required: 24 },
-                { name: '【历练 · 十】', required: 35 },
-                { name: '【历练 · 十二】', required: 47 }
+                { name: '【历练·四】', required: 6, editable: true },
+                { name: '【历练·六】', required: 12, editable: true },
+                { name: '【历练·八】', required: 24, editable: true },
+                { name: '【历练·十】', required: 35, editable: true },
+                { name: '【历练·十二】', required: 47, editable: true }
             ],
         }
     };
@@ -103,6 +103,23 @@ const ResourceTracker = (() => {
             windFire: Array(5).fill().map(() => ({ completed: 0 })),
             earthWater: Array(5).fill().map(() => ({ completed: 0 }))
         },
+        targetSelection: {
+            classes: {
+                guidao: false,
+                shenji: false,
+                qihuang: false,
+                longdun: false,
+                pojun: false
+            },
+            attributes: {
+                yin: false,
+                yang: false,
+                feng: false,
+                huo: false,
+                di: false,
+                shui: false
+            }
+        },
         trainingHistory: [], // 核销操作历史记录
         lastUpdated: null
     };
@@ -115,10 +132,16 @@ const ResourceTracker = (() => {
      */
     const init = () => {
         console.log('🚀 密探资源系统启动...');
-        setupDOM();
-        loadData();
-        setupEventListeners();
-        renderAll();
+        try {
+            setupDOM();
+            loadData();
+            renderAll();
+            setupEventListeners();
+            console.log('✅ 初始化完成，当前状态:', JSON.stringify(state, null, 2));
+        } catch (error) {
+            console.error('初始化过程中出错:', error);
+            alert('系统初始化失败，请刷新页面重试');
+        }
     };
 
     /**
@@ -139,19 +162,41 @@ const ResourceTracker = (() => {
             const saved = localStorage.getItem(CONFIG.storageKey);
             if (saved) {
                 const parsed = JSON.parse(saved);
-                // 合并状态，保留新添加的trainingHistory字段
+                
+                // 初始化材料状态
+                const materials = {};
+                GAME_DATA.materials.forEach(material => {
+                    materials[material.id] = parsed.materials?.[material.id] || false;
+                });
+                
+                // 合并状态
                 state = {
-                    ...state,
-                    ...parsed,
+                    ...resetState(), // 获取默认状态
+                    ...parsed,      // 覆盖保存的值
+                    materials,      // 使用初始化后的材料状态
+                    // 确保嵌套结构完整
+                    targetSelection: parsed.targetSelection || resetState().targetSelection,
                     trainingHistory: parsed.trainingHistory || []
                 };
-                console.log('已加载保存的数据');
+
+                // 确保历练状态正确加载
+                ['yinYang', 'windFire', 'earthWater'].forEach(category => {
+                    if (parsed.training?.[category]) {
+                        state.training[category] = parsed.training[category].map((item, i) => ({
+                            completed: item.completed || 0,
+                            required: item.required || GAME_DATA.training[category][i].required
+                        }));
+                    }
+                });
             }
             updateLastUpdated();
         } catch (e) {
             console.error('数据加载失败:', e);
+            // 如果加载失败，重置为默认状态
+            state = resetState();
         }
     };
+    
 
     // ==================== 渲染函数 ====================
 
@@ -163,6 +208,7 @@ const ResourceTracker = (() => {
         const baseConditionsMet = checkBaseConditions(expStatus);
         
         updateBasicUI(expStatus);
+        renderTargetSelection(); // 先渲染目标选择
         renderClassStatus(baseConditionsMet);
         renderMaterials();
         renderTraining();
@@ -178,6 +224,29 @@ const ResourceTracker = (() => {
         dom.fragments.value = state.fragments;
         dom.scrolls.value = state.scrolls;
     };
+
+
+    /**
+     * 目标密探元素
+     */
+    const renderTargetSelection = () => {
+        const targetSection = document.querySelector('.target-section');
+        if (!targetSection) {
+            console.error('目标密探区域未找到');
+            return;
+        }
+        
+        // 更新所有复选框状态
+        const checkboxes = targetSection.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            const type = checkbox.dataset.type;
+            const value = checkbox.dataset.value;
+            checkbox.checked = type === 'class' 
+                ? state.targetSelection.classes[value] 
+                : state.targetSelection.attributes[value];
+        });
+    };
+    
 
     /**
      * 渲染职业状态
@@ -285,28 +354,29 @@ const ResourceTracker = (() => {
      */
     const renderTrainingCategory = (category, container) => {
         container.innerHTML = GAME_DATA.training[category].map((item, index) => {
-            const trainingItem = state.training[category][index];
-            const completed = trainingItem.completed || 0;
-            const isMet = completed >= item.required;
-            
-            // 计算该项目是否有可撤销的历史记录
-            const hasHistory = state.trainingHistory.some(action => 
-                action.category === category && 
-                action.index == index
-            );
-            
-            // 计算剩余可核销次数（不超过需求次数）
-            const remaining = Math.max(0, item.required - completed);
-            
+            const trainingItem = state.training[category][index] || { completed: 0, required: item.required };
+            const completed = trainingItem.completed;
+            const required = trainingItem.required;
+            const isMet = completed >= required;
+            const remaining = Math.max(0, required - completed);
+    
             return `
                 <div class="training-item">
                     <div class="training-header">
-                        <div class="training-name">${item.name}*${item.required}次</div>
-                        <div class="sub-status-indicator ${isMet ? 'met' : 'not-met'}">
-                            ${isMet ? '已满足' : `${completed}/${item.required}`}
+                        <div class="training-name">${item.name}</div>
+                        <div class="training-input-status">
+                            <input type="number" 
+                                class="training-count-input" 
+                                data-category="${category}" 
+                                data-index="${index}"
+                                value="${required}" 
+                                min="1">
+                            <div class="sub-status-indicator ${isMet ? 'met' : 'not-met'}">
+                                ${isMet ? '已满足' : `${completed}/${required}`}
+                            </div>
                         </div>
                     </div>
-                    ${renderCircles(item.required, completed)}
+                    ${renderCircles(required, completed)}
                     <div class="training-actions">
                         <button class="consume-btn" 
                             data-category="${category}" 
@@ -332,7 +402,7 @@ const ResourceTracker = (() => {
                         <button class="undo-btn" 
                             data-category="${category}" 
                             data-index="${index}"
-                            ${!hasHistory ? 'disabled' : ''}>
+                            ${completed <= 0 ? 'disabled' : ''}>
                             撤销
                         </button>
                     </div>
@@ -340,6 +410,7 @@ const ResourceTracker = (() => {
             `;
         }).join('');
     };
+    
 
 
 
@@ -352,19 +423,15 @@ const ResourceTracker = (() => {
      */
     const renderCircles = (required, completed) => {
         let html = '<div class="circles-container">';
-        
-        // 严格按required数量显示圆圈（不再有最小12个的限制）
         const totalCircles = required;
-        
-        // 计算行数（每行6个圆圈）
-        const rows = Math.ceil(totalCircles / 6);
+        const rows = Math.ceil(totalCircles / 10); // 每行10个圆圈
         
         for (let row = 0; row < rows; row++) {
             html += '<div class="circles-row">';
-            const circlesInRow = Math.min(6, totalCircles - row * 6);
+            const circlesInRow = Math.min(10, totalCircles - row * 10);
             
             for (let i = 0; i < circlesInRow; i++) {
-                const circleIndex = row * 6 + i;
+                const circleIndex = row * 10 + i;
                 const isFilled = circleIndex < completed;
                 html += `<div class="circle ${isFilled ? 'filled' : ''}"></div>`;
             }
@@ -422,12 +489,23 @@ const ResourceTracker = (() => {
     /**
      * 处理核销操作
      */
-    const handleConsume = (category, index) => {
+    const handleConsume = (category, index, count = 1) => {
+        const trainingItem = state.training[category][index];
+        if (!trainingItem) return;
+        
+        const required = trainingItem.required;
+        const current = trainingItem.completed || 0;
+        const remaining = required - current;
+        
+        const actualCount = Math.min(count, remaining);
+        if (actualCount <= 0) return;
+        
         // 记录操作历史
         state.trainingHistory.push({
             category,
             index,
-            previousCount: state.training[category][index].completed,
+            previousCount: current,
+            count: actualCount,
             timestamp: new Date().toISOString()
         });
         
@@ -437,7 +515,7 @@ const ResourceTracker = (() => {
         }
         
         // 执行核销
-        state.training[category][index].completed++;
+        state.training[category][index].completed = current + actualCount;
         updateAndSave();
     };
 
@@ -445,28 +523,22 @@ const ResourceTracker = (() => {
      * 处理撤销操作
      */
     const handleUndo = (category, index) => {
-        if (state.trainingHistory.length === 0) return;
+        const trainingItem = state.training[category][index];
+        if (!trainingItem || trainingItem.completed <= 0) return;
         
-        // 找到该category和index的最新记录
-        const lastActionIndex = [...state.trainingHistory].reverse()
-            .findIndex(action => 
-                action.category === category && 
-                action.index == index  // 注意宽松相等，确保类型匹配
-            );
+        // 找到最近一次操作
+        const lastActionIndex = [...state.trainingHistory]
+            .reverse()
+            .findIndex(a => a.category === category && a.index === index);
         
-        if (lastActionIndex === -1) return;
-        
-        // 计算实际索引
-        const actualIndex = state.trainingHistory.length - 1 - lastActionIndex;
-        const lastAction = state.trainingHistory[actualIndex];
-        
-        // 恢复状态
-        state.training[category][index].completed = lastAction.previousCount;
-        
-        // 移除这条历史记录
-        state.trainingHistory.splice(actualIndex, 1);
-        
-        updateAndSave();
+        if (lastActionIndex !== -1) {
+            const actualIndex = state.trainingHistory.length - 1 - lastActionIndex;
+            const lastAction = state.trainingHistory[actualIndex];
+            
+            trainingItem.completed = lastAction.previousCount;
+            state.trainingHistory.splice(actualIndex, 1);
+            updateAndSave();
+        }
     };
 
     // ==================== 事件处理 ====================
@@ -475,6 +547,23 @@ const ResourceTracker = (() => {
      * 设置事件监听器
      */
     const setupEventListeners = () => {
+        // 目标选择变化监听
+        document.addEventListener('change', (e) => {
+            if (e.target.matches('.target-section input[type="checkbox"]')) {
+                const checkbox = e.target;
+                const type = checkbox.dataset.type;
+                const value = checkbox.dataset.value;
+                
+                if (type === 'class') {
+                    state.targetSelection.classes[value] = checkbox.checked;
+                } else if (type === 'attribute') {
+                    state.targetSelection.attributes[value] = checkbox.checked;
+                }
+                
+                updateAndSave();
+            }
+        });
+
         // 金钱复选框
         dom.moneyCheck.addEventListener('change', () => {
             state.moneyChecked = dom.moneyCheck.checked;
@@ -505,21 +594,40 @@ const ResourceTracker = (() => {
         document.addEventListener('click', (e) => {
             // 核销按钮
             if (e.target.classList.contains('consume-btn')) {
-                const { category, index } = e.target.dataset;
-                handleConsume(category, index);
+                const { category, index, count } = e.target.dataset;
+                handleConsume(category, parseInt(index), parseInt(count) || 1);
+                return;
             }
             
-            // 撤销按钮 - 注意检查class名是否匹配
+            // 撤销按钮
             if (e.target.classList.contains('undo-btn')) {
                 const { category, index } = e.target.dataset;
-                handleUndo(category, index); // 确保调用了这个函数
+                handleUndo(category, parseInt(index));
+                return;
             }
         });
 
+        // 历练次数输入框
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('training-count-input')) {
+                const input = e.target;
+                const category = input.dataset.category;
+                const index = parseInt(input.dataset.index);
+                const newValue = Math.max(1, parseInt(input.value) || 1);
+                
+                state.training[category][index].required = newValue;
+                renderTraining();
+                
+                clearTimeout(window.saveTimeout);
+                window.saveTimeout = setTimeout(() => {
+                    updateAndSave();
+                }, 300);
+            }
+        });
+            
         // 重置按钮
         dom.resetButton.addEventListener('click', () => {
             if (confirm('确定要清空所有记录吗？')) {
-                // 重置状态但保留历史记录
                 const newState = {
                     ...resetState(),
                     trainingHistory: state.trainingHistory
@@ -572,6 +680,7 @@ const ResourceTracker = (() => {
      */
     const saveData = () => {
         try {
+            // 保存完整状态
             localStorage.setItem(CONFIG.storageKey, JSON.stringify(state));
         } catch (e) {
             console.error('保存数据失败:', e);
@@ -587,19 +696,39 @@ const ResourceTracker = (() => {
         GAME_DATA.materials.forEach(material => {
             materials[material.id] = false;
         });
+        
+        // 初始化历练状态
+        const initTraining = (category) => 
+            GAME_DATA.training[category].map(item => ({
+                completed: 0,
+                required: item.required
+            }));
 
         // 返回全新状态对象
         return {
             moneyChecked: false,
             fragments: 0,
             scrolls: 0,
-            materials: materials,
+            materials,
             training: {
-                yinYang: Array(5).fill().map(() => ({ completed: 0 })),
-                windFire: Array(5).fill().map(() => ({ completed: 0 })),
-                earthWater: Array(5).fill().map(() => ({ completed: 0 }))
+                yinYang: initTraining('yinYang'),
+                windFire: initTraining('windFire'),
+                earthWater: initTraining('earthWater')
             },
-            trainingHistory: [], // 清空操作历史
+            targetSelection: {
+                classes: Object.fromEntries(
+                    GAME_DATA.classes.map(cls => [getClassKey(cls), false])
+                ),
+                attributes: {
+                    yin: false,
+                    yang: false,
+                    feng: false,
+                    huo: false,
+                    di: false,
+                    shui: false
+                }
+            },
+            trainingHistory: [],
             lastUpdated: new Date().toISOString()
         };
     };
