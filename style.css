@@ -10,7 +10,7 @@
   --black: #1d1d1f;      /* 主要文字颜色 */
   
   /* 主题色 */
-  --blue: #0071e3;       /* 主要操作按钮 */
+  --blue: #90c6ff;       /* 主要操作按钮 */
   --green: #34c759;      /* 成功状态 */
   --red: #ff3b30;        /* 错误/危险操作 */
   
@@ -282,6 +282,7 @@ body {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
 /* 达成状态样式 */
 .status-indicator.ready,
@@ -538,14 +539,21 @@ input[type="checkbox"] {
   width: 16px;
   height: 16px;
   border-radius: 50%;     /* 圆形 */
-  border: 1px solid var(--gray-200);
+  background: transparent;
+  border: 1px solid var(--gray-500) !important;
   transition: all 0.2s;   /* 状态变化动画 */
 }
-/* 已填充的圆圈 */
-.circle.filled {
-  background: var(--blue);
+/* 未核销的圆圈 */
+.circle:not(.filled) {
+  background: #dadada;
   border-color: var(--blue);
-  transform: scale(1.1);  /* 轻微放大效果 */
+  opacity: 0.7; 
+}
+/* 已核销的圆圈 */
+.circle.filled {
+  background: #68b3ff;
+  border-color: var(--blue);
+  transform: scale(1.02);  /* 轻微放大效果 */
 }
 
 /* ==================== 按钮样式 ==================== */
@@ -577,19 +585,20 @@ input[type="checkbox"] {
 /* 核销按钮（主操作按钮） */
 .consume-btn {
   background: var(--blue);
-  color: white;
+  color: rgb(41, 41, 41);
 }
 
 /* 禁用状态的核销按钮 */
 .consume-btn:disabled {
   opacity: 0.5;
+  color: var(--gray-800) !important;
   cursor: not-allowed;    /* 禁用指针 */
   background: var(--blue); /* 保持颜色一致 */
 }
 
 /* 核销按钮悬停效果 */
 .consume-btn:not(:disabled):hover {
-  background: #0062c4;    /* 深蓝色 */
+  background: #68b3ff;    /* 深蓝色 */
   box-shadow: var(--shadow-sm); /* 添加阴影 */
 }
 
@@ -676,6 +685,68 @@ input[type="checkbox"] {
 
 /* 移动端布局（宽度≤600px） */
 @media (max-width: 600px) {
+  /* ===== 全局文字间距压缩 ===== */
+  body {
+    line-height: 1.15 !important;  /* 默认1.25 → 1.15 */
+  }
+
+  /* ===== 主要容器内边距调整 ===== */
+  #resourceTracker,
+  .target-section,
+  .status-column,
+  .training-category {
+    padding-top: 12px !important;    /* 原16-20px → 12px */
+    padding-bottom: 12px !important;
+  }
+  /* ===== 列表项紧凑模式 ===== */
+  .status-item,
+  .training-item,
+  .resource-item {
+    padding-top: 6px !important;     /* 原12-16px → 8px */
+    padding-bottom: 6px !important;
+    margin-bottom: 6px !important;   /* 原8-12px → 6px */
+  }
+  /* ===== 按钮/输入框高度压缩 ===== */
+  .training-actions button,
+  .training-count-input,
+  .sub-status-indicator {
+    height: 26px !important;         /* 原28-32px → 26px */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  /* ===== 标题间距调整 ===== */
+  .section-title,
+  .training-category-title,
+  .status-column h3 {
+    padding-top: 10px !important;     /* 原8-12px → 6px */
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;   /* 原12-16px → 8px */
+  }
+
+  /* ===== 状态面板文字缩小 ===== */
+  /* 职业名称（诡道/神机等） */
+  .status-item.guidao,
+  .status-item.shenji,
+  .status-item.qihuang,
+  .status-item.longdun,
+  .status-item.pojun {
+    font-size: 13px !important;  /* 原15-16px → 13px */
+    padding: 8px 10px !important; /* 同步缩小内边距 */
+  }
+  /* 属性名称（阴/阳等） */
+  .status-item.yin,
+  .status-item.yang,
+  .status-item.feng,
+  .status-item.huo,
+  .status-item.di,
+  .status-item.shui {
+    font-size: 12px !important;  /* 特殊属性更小字号 */
+  }
+  /* 状态文字（可满级/待沉淀） */
+  .status-column .status-indicator {
+    font-size: 10px !important;  /* 保持与之前修改一致 */
+  }
+  
   .training-actions {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important; /* 2列网格 */
@@ -699,10 +770,13 @@ input[type="checkbox"] {
     padding: 2px 4px !important;
   }
 
-  .status-indicator.pending {
+  .status-indicator {
+    font-size: 10px !important;  /* 强制统一大小 */
+  }
+
+  .target-section .status-indicator {
     font-size: 10px !important;
-    padding: 4px 6px !important;
-    white-space: nowrap; /* 防止换行 */
+    padding: 1px 6px !important;
   }
 
   
@@ -710,6 +784,7 @@ input[type="checkbox"] {
   .sub-status-indicator {
     min-width: 46px !important;
     padding: 2px 4px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
   }
   
 
