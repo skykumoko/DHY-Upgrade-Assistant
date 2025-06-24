@@ -184,7 +184,7 @@ const ResourceTracker = (() => {
                     if (parsed.training?.[category]) {
                         state.training[category] = parsed.training[category].map((item, i) => ({
                             completed: item.completed || 0,
-                            required: item.required || GAME_DATA.training[category][i].required
+                            required: item.required >= 0 ? item.required : GAME_DATA.training[category][i].required
                         }));
                     }
                 });
@@ -356,7 +356,7 @@ const ResourceTracker = (() => {
         container.innerHTML = GAME_DATA.training[category].map((item, index) => {
             const trainingItem = state.training[category][index] || { completed: 0, required: item.required };
             const completed = trainingItem.completed;
-            const required = trainingItem.required;
+            const required = Math.max(0, trainingItem.required);
             const isMet = completed >= required;
             const remaining = Math.max(0, required - completed);
     
@@ -370,13 +370,13 @@ const ResourceTracker = (() => {
                                 data-category="${category}" 
                                 data-index="${index}"
                                 value="${required}" 
-                                min="1">
+                                min="0">
                             <div class="sub-status-indicator ${isMet ? 'met' : 'not-met'}">
                                 ${isMet ? '已满足' : `${completed}/${required}`}
                             </div>
                         </div>
                     </div>
-                    ${renderCircles(required, completed)}
+                    ${required > 0 ? renderCircles(required, completed) : ''}
                     <div class="training-actions">
                         <button class="consume-btn" 
                             data-category="${category}" 
@@ -411,35 +411,33 @@ const ResourceTracker = (() => {
         }).join('');
     };
     
-
-
-
     
-
     /**
-     * 渲染圆圈进度 (严格按required数量显示)
+     * 渲染圆圈进度 (自适应宽度布局)
      * @param {number} required 需要的总次数
      * @param {number} completed 已完成次数
      */
     const renderCircles = (required, completed) => {
-        let html = '<div class="circles-container">';
-        const totalCircles = required;
-        const rows = Math.ceil(totalCircles / 10); // 每行10个圆圈
+        if (required <= 0) return '';
         
-        for (let row = 0; row < rows; row++) {
-            html += '<div class="circles-row">';
-            const circlesInRow = Math.min(10, totalCircles - row * 10);
-            
-            for (let i = 0; i < circlesInRow; i++) {
-                const circleIndex = row * 10 + i;
-                const isFilled = circleIndex < completed;
-                html += `<div class="circle ${isFilled ? 'filled' : ''}"></div>`;
-            }
-            html += '</div>';
+        // 创建单个圆圈HTML
+        const createCircle = (index) => 
+            `<div class="circle ${index < completed ? 'filled' : ''}"></div>`;
+
+        // 生成所有圆圈
+        let circlesHTML = '';
+        for (let i = 0; i < required; i++) {
+            circlesHTML += createCircle(i);
         }
-        
-        return html + '</div>';
+
+        // 使用flex容器包裹（不再需要分行逻辑）
+        return `
+            <div class="circles-container">
+                ${circlesHTML}
+            </div>
+        `;
     };
+
 
 
     // ==================== 状态计算 ====================
@@ -509,15 +507,11 @@ const ResourceTracker = (() => {
             timestamp: new Date().toISOString()
         });
         
-        // 限制历史记录数量
-        if (state.trainingHistory.length > 50) {
-            state.trainingHistory.shift();
-        }
-        
         // 执行核销
         state.training[category][index].completed = current + actualCount;
         updateAndSave();
     };
+
 
     /**
      * 处理撤销操作
@@ -613,7 +607,7 @@ const ResourceTracker = (() => {
                 const input = e.target;
                 const category = input.dataset.category;
                 const index = parseInt(input.dataset.index);
-                const newValue = Math.max(1, parseInt(input.value) || 1);
+                const newValue = Math.max(0, parseInt(input.value) || 0); 
                 
                 state.training[category][index].required = newValue;
                 renderTraining();
@@ -701,7 +695,7 @@ const ResourceTracker = (() => {
         const initTraining = (category) => 
             GAME_DATA.training[category].map(item => ({
                 completed: 0,
-                required: item.required
+                required: item.required || 1
             }));
 
         // 返回全新状态对象
