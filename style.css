@@ -209,7 +209,7 @@ body {
 .class-status,
 .attribute-status {
   display: grid;          /* 网格布局 */
-  gap: 12px;              /* 项间距 */
+  gap: 8px;              /* 项间距 */
 }
 /* 单个状态项 */
 .status-item {
@@ -427,10 +427,16 @@ input[type="checkbox"] {
 /* ==================== 历练模块 ==================== */
 /* 次数输入 */
 .training-input-status {
-  display: flex;
+  position: relative;
+  display: inline-flex;
+  flex: 1 1 auto;
   align-items: center;
+  min-width: min(150px, 100%); 
+  justify-content: flex-end;
   gap: 8px;
 }
+
+/* 输入框 */
 .training-count-input {
   color: #575757;
   width: 60px !important; 
@@ -441,6 +447,22 @@ input[type="checkbox"] {
   text-align: right;
   font-size: 14px!important;
   box-sizing: border-box; 
+  position: relative;
+  z-index: 2;
+  background: white !important;
+  transition: none !important; /* 禁用过渡效果防止闪烁 */
+  -moz-appearance: textfield;
+  appearance: textfield;
+  pointer-events: auto !important; /* 禁用默认行为 */
+  user-select: auto !important; /* 禁用默认行为 */
+  -webkit-user-select: text; /* 移动端优化 */
+  -webkit-touch-callout: default; /* 移动端优化 */
+}
+/* 隐藏其他浏览器的上下箭头 */
+.training-count-input::-webkit-outer-spin-button,
+.training-count-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 /* 主容器 */
 .training-container {
@@ -732,7 +754,7 @@ input[type="checkbox"] {
   .status-item.qihuang,
   .status-item.longdun,
   .status-item.pojun {
-    font-size: 13px !important;  /* 原15-16px → 13px */
+    font-size: 14px !important;  /* 原15-16px → 13px */
     padding: 8px 10px !important; /* 同步缩小内边距 */
   }
   /* 属性名称（阴/阳等） */
@@ -742,7 +764,7 @@ input[type="checkbox"] {
   .status-item.huo,
   .status-item.di,
   .status-item.shui {
-    font-size: 12px !important;  /* 特殊属性更小字号 */
+    font-size: 13px !important;  /* 特殊属性更小字号 */
   }
   /* 状态文字（可满级/待沉淀） */
   .status-column .status-indicator {
@@ -759,7 +781,7 @@ input[type="checkbox"] {
   }
 
   .training-count-input {
-    width: 40px !important;  /* 移动端更窄 */
+    width: 30px !important;  /* 移动端更窄 */
     border-radius: 6px!important;
     text-align: right;
     font-size: 12px!important;
@@ -797,9 +819,9 @@ input[type="checkbox"] {
     gap: 4px;
 }
 }
-}
 
-}
+
+
 
 /* 超小屏幕优化（宽度≤340px） */
 @media (max-width: 340px) {
@@ -811,18 +833,6 @@ input[type="checkbox"] {
     width: 10px;
     height: 10px;
     min-width: 10px;
-  }
-}
-
-/* Edge浏览器专属修复 */
-@supports (-ms-ime-align:auto) {
-  .training-actions {
-    display: -ms-flexbox !important;
-    -ms-flex-wrap: nowrap !important;
-  }
-  .training-actions button {
-    -ms-flex: 1 0 auto !important;
-    width: 100% !important;
   }
 }
 
