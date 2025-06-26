@@ -818,8 +818,11 @@ input[type="checkbox"] {
   .circles-container {
     gap: 4px;
 }
-}
 
+.training-item .training-name {
+    min-width: 5.5em;  /* 刚好容纳"【历练·十二】" */
+    font-size: 0.95em; /* 可选：微调字体大小 */
+}
 
 
 
