@@ -814,16 +814,16 @@ input[type="checkbox"] {
   .circle {
     width: 12px;
     height: 12px;
-}
+ }
   .circles-container {
     gap: 4px;
-}
+ }
 
-.training-item .training-name {
+  .training-item .training-name {
     min-width: 5.5em;  /* 刚好容纳"【历练·十二】" */
     font-size: 0.95em; /* 可选：微调字体大小 */
+  }
 }
-
 
 
 /* 超小屏幕优化（宽度≤340px） */
